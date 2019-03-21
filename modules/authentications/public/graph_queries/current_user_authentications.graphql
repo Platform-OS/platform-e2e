@@ -1,0 +1,10 @@
+{
+  current_user{
+    email
+    authentications{
+      id
+      provider
+      raw_info
+    }
+  }
+}

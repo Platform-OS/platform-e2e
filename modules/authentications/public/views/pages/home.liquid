@@ -1,0 +1,35 @@
+---
+slug: authentications
+---
+{% if context.current_user.id %}
+  {{ context.current_user.email }}
+  <br>
+  {% include_form 'modules/authentications/log_out_form' %}
+{% else %}
+  <a href="authentications/sign-up">Register</a>
+  |
+  <a href="authentications/sign-in">Log in</a>
+{% endif %}
+
+<hr/>
+{% execute_query "modules/authentications/login_providers" %}
+{% for provider in g.login_providers %}
+  <p>
+    <a href="/auth/{{ provider }}?return_to=/authentications/welcome-page">
+      Connect {{ provider }}
+    </a>
+  </p>
+{% endfor %}
+
+<hr/>
+{% execute_query "modules/authentications/current_user_authentications" %}
+<p class="current-user-email">current_user: {{ g.current_user.email }}</p>
+<p class="current-user-authentications">authentications: {{ g.current_user.authentications | map: "provider" | join: ', ' }}</p>
+
+{% for authentication in g.current_user.authentications %}
+  <form action="/api/authentications/{{ authentication.id }}" method="POST">
+    <input type="hidden" name="authenticity_token" value="{{ context.authenticity_token }}">
+    <input type="hidden" value="delete" name="_method">
+    <input type="submit" value="Delete {{ authentication.provider }} authentication" />
+  </form>
+{% endfor %}
