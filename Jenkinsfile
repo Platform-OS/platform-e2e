@@ -77,8 +77,8 @@ pipeline {
       }
        post {
         always {
-          sh "cp -R /tmp/ ${WORKSPACE}"
-          archiveArtifacts artifacts: '**/*.png', fingerprint: true
+          sh "cp -R /tmp/**/*.png/ ${WORKSPACE}"
+          archiveArtifacts "${WORKSPACE}/*.png"
         }
       }
     }
