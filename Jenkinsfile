@@ -78,7 +78,7 @@ pipeline {
        post {
         always {
           sh 'ls -R /tmp'
-          archiveArtifacts artifacts: '/tmp/**/*.png', fingerprint: true
+          archiveArtifacts artifacts: '/tmp/*/test-1/HeadlessChrome_72.0.3626_Linux_0.0.0/errors:/*.png', fingerprint: true
         }
       }
     }
