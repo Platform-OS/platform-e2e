@@ -33,7 +33,7 @@ pipeline {
     stage('Test on URL') {
       when { expression { return !params.MP_URL.isEmpty() } }
       agent { docker { image "platformos/testcafe" } }
-      environment { MP_URL = "${params.MP_URL}" }
+      // environment { MP_URL = "${params.MP_URL}" }
       steps {
         withCredentials([usernamePassword(credentialsId: 'gmail-qa-user', usernameVariable: 'GOOGLE_EMAIL', passwordVariable: 'GOOGLE_PASSWORD')]) {
           sh 'node -e "console.log(process.env)"'
