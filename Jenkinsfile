@@ -75,6 +75,11 @@ pipeline {
           sh 'npm run test-ci'
         }
       }
+       post {
+        always {
+          archiveArtifacts artifacts: '/tmp/*.png', fingerprint: true
+        }
+      }
     }
   }
 }

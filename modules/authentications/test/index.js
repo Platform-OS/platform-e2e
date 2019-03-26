@@ -6,7 +6,6 @@ import OAuth from './oauth-page';
 const users = new Users();
 const oauth = new OAuth();
 
-console.log(process.env);
 const { user, google } = {
   user: {
     email: faker.internet.exampleEmail().toLowerCase(),
