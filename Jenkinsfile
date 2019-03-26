@@ -35,7 +35,9 @@ pipeline {
       agent { docker { image "platformos/testcafe" } }
       environment { MP_URL = "${params.MP_URL}" }
       steps {
-        sh 'npm run test-ci'
+        withCredentials([usernameColonPassword(credentialsId: 'gmail-qa-user', variable: 'GOOGLE_EMAIL:GOOGLE_PASSWORD')]) {
+          sh 'npm run test-ci'
+        }
       }
     }
 

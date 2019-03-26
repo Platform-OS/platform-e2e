@@ -1,35 +1,41 @@
 import { Selector } from 'testcafe';
 import faker from 'faker';
 import Users from './page-object';
-import { checkLiquidErrors, getBtAlertText } from '@platform-os/testcafe-helpers';
+import OAuth from './oauth-page';
 
 const users = new Users();
+const oauth = new OAuth();
 
-const { user } = {
+const { user, google } = {
   user: {
-    email: faker.internet.exampleEmail(),
+    email: faker.internet.exampleEmail().toLowerCase(),
     password: faker.internet.password()
+  },
+  google: {
+    email: process.env.GOOGLE_EMAIL,
+    password: process.env.GOOGLE_PASSWORD
   }
 };
 
-fixture('Register as user').page(process.env.MP_URL);
+fixture('OAuth authentications').page(`${process.env.MP_URL}/authentications`);
 
-test('There are no liquid errors on the page', async t => {
-  await checkLiquidErrors({ t, Selector });
-});
-
-test('Create user account', async t => {
-  await t.navigateTo('/authentications/sign-up');
-
-  await t
-    .typeText(users.input.email, user.email)
-    .typeText(users.input.password, user.password)
-    .click(users.button.submit);
-
-  await t.expect(await getBtAlertText({ Selector })).contains(users.alerts.success);
-}).after(async t => {
-  // Check if login works. In After hook to not throw off tests when running concurrently
-
+test('Connect existing user', async t => {
+  await users.register(user.email, user.password);
   await users.login(user.email, user.password);
-  await t.expect(await getBtAlertText({ Selector })).contains(users.text.login);
+  await t.navigateTo('/authentications');
+
+  await t.expect(oauth.currentUser.email.innerText).eql(`current_user: ${user.email}`);
+  await t.expect(oauth.currentUser.authentications.innerText).eql('authentications:');
+  await oauth.connectWith(t, 'google');
+  await t
+    .typeText(oauth.google.email, google.email)
+    .click(oauth.google.next)
+    .typeText(oauth.google.password, google.password)
+    .click(oauth.google.passwordNext);
+  await t.expect(oauth.main.innerText).eql('You hoo! You are connected.');
+
+  await t.navigateTo('/authentications');
+  await t.expect(oauth.currentUser.authentications.innerText).eql('authentications: google');
+  await oauth.disconnectFrom(t, 'google');
+  await t.expect(oauth.currentUser.authentications.innerText).eql('authentications:');
 });
