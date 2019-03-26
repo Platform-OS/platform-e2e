@@ -77,7 +77,7 @@ pipeline {
       }
        post {
         always {
-          archiveArtifacts artifacts: '/tmp/*.png', fingerprint: true
+          archiveArtifacts artifacts: '/tmp/**/*.png', fingerprint: true
         }
       }
     }
