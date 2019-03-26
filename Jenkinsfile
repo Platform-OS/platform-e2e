@@ -77,7 +77,7 @@ pipeline {
       }
        post {
         always {
-          archiveArtifacts "screenshots"
+          archiveArtifacts "screenshots/"
         }
       }
     }
