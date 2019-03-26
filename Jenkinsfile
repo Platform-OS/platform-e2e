@@ -77,8 +77,8 @@ pipeline {
       }
        post {
         always {
-          sh 'ls -R /tmp'
-          archiveArtifacts artifacts: '/tmp/*/test-1/HeadlessChrome_72.0.3626_Linux_0.0.0/errors/*.png', fingerprint: true
+          sh "cp -R /tmp/ ${WORKSPACE}"
+          archiveArtifacts artifacts: '**/*.png', fingerprint: true
         }
       }
     }
