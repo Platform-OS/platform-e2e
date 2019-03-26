@@ -79,7 +79,7 @@ pipeline {
         always {
           sh "cp -R /tmp/ ${WORKSPACE}"
           sh "ls -R ${WORKSPACE}"
-          archiveArtifacts "${WORKSPACE}/**/*.png"
+          archiveArtifacts "${WORKSPACE}/tmp/"
         }
       }
     }
