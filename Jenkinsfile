@@ -36,7 +36,8 @@ pipeline {
       environment { MP_URL = "${params.MP_URL}" }
       steps {
         withCredentials([usernamePassword(credentialsId: 'gmail-qa-user', usernameVariable: 'GOOGLE_EMAIL', passwordVariable: 'GOOGLE_PASSWORD')]) {
-          sh 'npm run test-ci'
+          sh 'node -e "console.log(process.env)"'
+          // sh 'npm run test-ci'
         }
       }
     }
