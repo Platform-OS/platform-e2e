@@ -77,8 +77,8 @@ pipeline {
       }
        post {
         always {
-          copyArtifacts()
-          // archiveArtifacts artifacts: '/tmp/**/*.png', fingerprint: true
+          sh 'ls -R /tmp'
+          archiveArtifacts artifacts: '/tmp/**/*.png', fingerprint: true
         }
       }
     }
@@ -93,12 +93,4 @@ def commitInfo() {
   def commitMsg = sh(returnStdout: true, script: 'git log --no-merges --format="%B" -1 ${commitSha}').trim()
 
   return "<${GH_URL}/commit/${commitSha}|${commitSha} ${commitMsg}>"
-}
-
-def copyArtifacts() {
-  def image = docker.image("alpine")
-  image.inside {
-     sh "cp /tmp/**/*.png ${WORKSPACE}"
-     archiveArtifacts '**/*.png'
- }
 }
