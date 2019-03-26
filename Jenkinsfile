@@ -77,9 +77,7 @@ pipeline {
       }
        post {
         always {
-          sh "mkdir ${WORKSPACE}/screenshots"
-          sh "cp -R /tmp/ ${WORKSPACE}/screenshots"
-          archiveArtifacts "tmp/screenshots"
+          archiveArtifacts "screenshots"
         }
       }
     }
