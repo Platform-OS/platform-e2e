@@ -1,0 +1,38 @@
+---
+slug: import_export
+---
+<h1>Import Export</h1>
+{% graphql data %}
+{
+  users(per_page: 10){
+    total_entries
+    results{
+      email
+      profiles {
+        profile_type
+        custom_images{
+          url
+        }
+        custom_attachments{
+          url
+        }
+      }
+    }
+  }
+  models(per_page: 10){
+    total_entries
+    results{
+      name
+      id
+      images{
+        filename
+        url
+      }
+      attachments{
+        url
+      }
+    }
+  }
+}
+{% endgraphql %}
+<div id="results">{{ data | json }}</div>

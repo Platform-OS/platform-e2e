@@ -1,0 +1,10 @@
+name: buyer
+properties:
+- name: mobile_number
+  type: string
+- name: bio
+  type: string
+- name: avatar
+  type: photo
+- name: document
+  type: file

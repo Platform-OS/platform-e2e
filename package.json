@@ -13,6 +13,7 @@
   "license": "ISC",
   "devDependencies": {
     "@platform-os/testcafe-helpers": "^2.1.1",
-    "faker": "^4.1.0"
+    "faker": "^4.1.0",
+    "shelljs": "^0.8.3"
   }
 }

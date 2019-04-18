@@ -1,0 +1,101 @@
+{
+  "users": [
+    {
+      "id": 1000,
+      "email": "tom@example.com",
+      "first_name": "Tom",
+      "slug": "tom"
+    },
+    {
+      "id": 1001,
+      "email": "mike@example.com",
+      "first_name": "mike",
+      "slug": "mike",
+      "created_at": "2010-10-10 10:00:00",
+      "updated_at": "2010-10-11 11:00:00",
+      "profiles": [
+        {
+          "type_name": "student",
+          "id": 2001,
+          "properties": {
+            "age": 21
+          },
+          "attachments": [
+            {
+              "name": "document",
+              "url": "modules/import_export/files/document.pdf"
+            }
+          ],
+          "images": [
+            {
+              "name": "avatar",
+              "url": "modules/import_export/files/avatar.png"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "models": [
+    {
+      "id": 1,
+      "user_id": 1000,
+      "type_name": "house",
+      "customizable_id": 1000,
+      "customizable_type": "User",
+      "properties": {
+        "description": "Large house",
+        "color": "red"
+      }
+    },
+    {
+      "id": 2,
+      "user_id": 1001,
+      "type_name": "house",
+      "customizable_id": 1001,
+      "customizable_type": "User",
+      "properties": {
+        "color": "green",
+        "description": "Small house",
+      },
+      "addresses": [
+        {
+          "name": "foo_address",
+          "address": "Warsaw",
+          "postcode": "01-001"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "user_id": 1001,
+      "type_name": "house",
+      "properties": {
+      },
+      "attachments": [
+        {
+          "name": "ownership",
+          "url": "modules/import_export/files/ownership_document.pdf"
+        }
+      ],
+      "images": [
+        {
+          "name": "house_photo",
+          "url": "modules/import_export/files/house_photo.png"
+        }
+      ]
+    }
+  ],
+  "transactables": [
+    {
+      "id": 1,
+      "creator_id": 1001,
+      "type_name": "boat",
+      "name": "Black Pearl",
+      "slug": "black-pearl",
+      "properties": {
+        "color": "green"
+      }
+    }
+  ]
+}
