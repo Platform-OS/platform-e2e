@@ -36,6 +36,7 @@ pipeline {
       environment { MP_URL = "${params.MP_URL}" }
       steps {
         withCredentials([usernamePassword(credentialsId: 'gmail-qa-user', usernameVariable: 'GOOGLE_EMAIL', passwordVariable: 'GOOGLE_PASSWORD')]) {
+          sh 'npm install'
           sh 'npm run test-ci'
         }
       }
