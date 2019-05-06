@@ -72,7 +72,7 @@ pipeline {
 
       steps {
         withCredentials([usernamePassword(credentialsId: 'gmail-qa-user', usernameVariable: 'GOOGLE_EMAIL', passwordVariable: 'GOOGLE_PASSWORD')]) {
-          sh 'npm run test-ci'
+          sh 'npm install && npm run test-ci'
         }
       }
        post {
