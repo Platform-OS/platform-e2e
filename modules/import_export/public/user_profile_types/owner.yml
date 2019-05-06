@@ -1,0 +1,4 @@
+name: owner
+properties:
+- name: mobile_number
+  type: string

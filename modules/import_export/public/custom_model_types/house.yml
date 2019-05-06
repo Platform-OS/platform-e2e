@@ -1,0 +1,10 @@
+name: house
+properties:
+- name: description
+  type: string
+- name: color
+  type: string
+- name: photo
+  type: photo
+- name: owneship_document
+  attribute_type: file
