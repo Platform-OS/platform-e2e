@@ -32,11 +32,12 @@ pipeline {
 
     stage('Test on URL') {
       when { expression { return !params.MP_URL.isEmpty() } }
-      agent { docker { image "platformos/testcafe" } }
+      agent { docker { image "platformos/testcafe"; args '-u root' } }
       environment { MP_URL = "${params.MP_URL}" }
       steps {
         withCredentials([usernamePassword(credentialsId: 'gmail-qa-user', usernameVariable: 'GOOGLE_EMAIL', passwordVariable: 'GOOGLE_PASSWORD')]) {
-          sh 'npm install && npm run test-ci'
+          sh 'npm install'
+          sh 'npm run test-ci'
         }
       }
     }
@@ -59,7 +60,7 @@ pipeline {
     }
 
     stage('Test qa') {
-      agent { docker { image "platformos/testcafe" } }
+      agent { docker { image "platformos/testcafe"; args '-u root' } }
 
       environment {
         MP_URL = "${qa_url}"
@@ -72,7 +73,8 @@ pipeline {
 
       steps {
         withCredentials([usernamePassword(credentialsId: 'gmail-qa-user', usernameVariable: 'GOOGLE_EMAIL', passwordVariable: 'GOOGLE_PASSWORD')]) {
-          sh 'npm install && npm run test-ci'
+          sh 'npm install'
+          sh 'npm run test-ci'
         }
       }
        post {
