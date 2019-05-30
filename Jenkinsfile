@@ -59,7 +59,7 @@ pipeline {
     }
 
     stage('Test qa') {
-      agent { docker { image "platformos/testcafe"; args '-u root' } }
+      agent { docker { image "platformos/testcafe-pos-cli"; args '-u root' } }
 
       environment {
         MP_URL = "${qa_url}"
