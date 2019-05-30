@@ -24,7 +24,7 @@ pipeline {
     stage('Deploy to URL') {
       when { expression { return !params.MP_URL.isEmpty() } }
       environment { MPKIT_URL = "${params.MP_URL}" }
-      agent { docker { image 'platformos/marketplace-kit:2.0' } }
+      agent { docker { image 'platformos/marketplace-kit' } }
       steps {
         sh 'marketplace-kit deploy'
       }
@@ -32,18 +32,17 @@ pipeline {
 
     stage('Test on URL') {
       when { expression { return !params.MP_URL.isEmpty() } }
-      agent { docker { image "platformos/testcafe"; args '-u root' } }
+      agent { docker { image "platformos/testcafe-pos-cli"; args '-u root' } }
       environment { MP_URL = "${params.MP_URL}" }
       steps {
         withCredentials([usernamePassword(credentialsId: 'gmail-qa-user', usernameVariable: 'GOOGLE_EMAIL', passwordVariable: 'GOOGLE_PASSWORD')]) {
-          sh 'npm install'
           sh 'npm run test-ci'
         }
       }
     }
 
     stage('Deploy qa') {
-      agent { docker { image 'platformos/marketplace-kit:2.0' } }
+      agent { docker { image 'platformos/marketplace-kit' } }
 
       environment {
         MPKIT_URL = "${qa_url}"
@@ -77,11 +76,7 @@ pipeline {
           sh 'npm run test-ci'
         }
       }
-       post {
-        always {
-          archiveArtifacts "screenshots/"
-        }
-      }
+      post { failure { archiveArtifacts "screenshots/" } }
     }
   }
 }
