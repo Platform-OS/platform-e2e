@@ -63,6 +63,8 @@ pipeline {
 
       environment {
         MP_URL = "${qa_url}"
+        MPKIT_TOKEN = credentials('POS_TOKEN')
+        MPKIT_EMAIL = "darek+ci@near-me.com"
       }
 
       when {
@@ -72,7 +74,6 @@ pipeline {
 
       steps {
         withCredentials([usernamePassword(credentialsId: 'gmail-qa-user', usernameVariable: 'GOOGLE_EMAIL', passwordVariable: 'GOOGLE_PASSWORD')]) {
-          sh 'npm install'
           sh 'npm run test-ci'
         }
       }
