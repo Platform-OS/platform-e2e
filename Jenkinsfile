@@ -59,10 +59,11 @@ pipeline {
     }
 
     stage('Test qa') {
-      agent { docker { image "platformos/testcafe-pos-cli"; args '-u root' } }
+      agent { docker { image "platformos/testcafe-pos-cli" } }
 
       environment {
         MP_URL = "${qa_url}"
+        MPKIT_URL = "${qa_url}"
         MPKIT_TOKEN = credentials('POS_TOKEN')
         MPKIT_EMAIL = "darek+ci@near-me.com"
       }
