@@ -66,6 +66,7 @@ pipeline {
         MPKIT_URL = "${qa_url}"
         MPKIT_TOKEN = credentials('POS_TOKEN')
         MPKIT_EMAIL = "darek+ci@near-me.com"
+        DEBUG = true
       }
 
       when {
