@@ -11,72 +11,35 @@ pipeline {
   }
 
   parameters {
-    string(description: 'Instance URL. When empty then we deploy on qa', name: 'MP_URL', defaultValue: '')
+    string(description: 'Instance URL. When empty then we deploy on qa0', name: 'MP_URL', defaultValue: '')
   }
 
   options {
     disableConcurrentBuilds()
     timeout(time: 10, unit: 'MINUTES')
-    buildDiscarder(logRotator(daysToKeepStr: '1', artifactDaysToKeepStr: '1'))
   }
 
   stages {
-    stage('Deploy to URL') {
-      when { expression { return !params.MP_URL.isEmpty() } }
-      environment { MPKIT_URL = "${params.MP_URL}" }
+    stage('Deploy on URL') {
       agent { docker { image 'platformos/marketplace-kit' } }
-      steps {
-        sh 'marketplace-kit deploy'
+      environment {
+        MPKIT_URL = "${params.MP_URL || qa_url}"
       }
+      when { anyOf { branch 'master' } }
+      steps { sh 'marketplace-kit deploy' }
     }
 
     stage('Test on URL') {
-      when { expression { return !params.MP_URL.isEmpty() } }
-      agent { docker { image "platformos/testcafe-pos-cli"; args '-u root' } }
-      environment { MP_URL = "${params.MP_URL}" }
-      steps {
-        withCredentials([usernamePassword(credentialsId: 'gmail-qa-user', usernameVariable: 'GOOGLE_EMAIL', passwordVariable: 'GOOGLE_PASSWORD')]) {
-          sh 'npm run test-ci'
-        }
-      }
-    }
-
-    stage('Deploy qa') {
-      agent { docker { image 'platformos/marketplace-kit' } }
-
-      environment {
-        MPKIT_URL = "${qa_url}"
-      }
-
-      when {
-        expression { return params.MP_URL.isEmpty() }
-        anyOf { branch 'master' }
-      }
-
-      steps {
-        sh 'marketplace-kit deploy'
-      }
-    }
-
-    stage('Test qa') {
       agent { docker { image "platformos/testcafe-pos-cli" } }
-
       environment {
-        MP_URL = "${qa_url}"
-        MPKIT_URL = "${qa_url}"
+        MP_URL = "${params.MP_URL || qa_url}"
+        MPKIT_URL = "${params.MP_URL || qa_url}"
         MPKIT_TOKEN = credentials('POS_TOKEN')
         MPKIT_EMAIL = "darek+ci@near-me.com"
-        DEBUG = true
       }
-
-      when {
-        expression { return params.MP_URL.isEmpty() }
-        anyOf { branch 'master' }
-      }
-
+      when { anyOf { branch 'master' } }
       steps {
         withCredentials([usernamePassword(credentialsId: 'gmail-qa-user', usernameVariable: 'GOOGLE_EMAIL', passwordVariable: 'GOOGLE_PASSWORD')]) {
-          sh 'env'
           sh 'npm run test-ci'
         }
       }
