@@ -11,7 +11,7 @@ pipeline {
   }
 
   parameters {
-    string(description: 'Instance URL. When empty then we deploy on qa0', name: 'MP_URL', defaultValue: '')
+    string(description: 'Instance URL. When empty then we deploy on qa0', name: 'MP_URL', defaultValue: qa_url)
   }
 
   options {
@@ -23,7 +23,7 @@ pipeline {
     stage('Deploy on URL') {
       agent { docker { image 'platformos/marketplace-kit' } }
       environment {
-        MPKIT_URL = "${params.MP_URL || qa_url}"
+        MPKIT_URL = "${params.MP_URL}"
       }
       when { anyOf { branch 'master' } }
       steps { sh 'marketplace-kit deploy' }
@@ -32,8 +32,8 @@ pipeline {
     stage('Test on URL') {
       agent { docker { image "platformos/testcafe-pos-cli" } }
       environment {
-        MP_URL = "${params.MP_URL || qa_url}"
-        MPKIT_URL = "${params.MP_URL || qa_url}"
+        MP_URL = "${params.MP_URL}"
+        MPKIT_URL = "${params.MP_URL}"
         MPKIT_TOKEN = credentials('POS_TOKEN')
         MPKIT_EMAIL = "darek+ci@near-me.com"
       }
