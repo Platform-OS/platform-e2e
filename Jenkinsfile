@@ -1,7 +1,5 @@
 @Library('pipeline-utils')_  // it's not a typo
 
-def qa_url = "https://platform-e2e.qa0-pos.apps.near-me.com"
-
 pipeline {
   agent any
 
@@ -11,7 +9,7 @@ pipeline {
   }
 
   parameters {
-    string(description: 'Instance URL. When empty then we deploy on qa0', name: 'MP_URL', defaultValue: qa_url)
+    string(description: 'Instance URL. When empty then we deploy on qa0', name: 'MP_URL', defaultValue: "https://platform-e2e.qa0-pos.apps.near-me.com")
   }
 
   options {
