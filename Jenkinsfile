@@ -19,12 +19,12 @@ pipeline {
 
   stages {
     stage('Deploy on URL') {
-      agent { docker { image 'platformos/marketplace-kit' } }
+      agent { docker { image 'platformos/pos-cli' } }
       environment {
         MPKIT_URL = "${params.MP_URL}"
       }
       when { anyOf { branch 'master' } }
-      steps { sh 'marketplace-kit deploy' }
+      steps { sh 'pos-cli deploy' }
     }
 
     stage('Test on URL') {
