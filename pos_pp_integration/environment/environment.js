@@ -14,4 +14,4 @@ export const MODULEDATA = process.env.DATA_GUI || {
   MODULENAME: `module+${+new Date()}`
 };
 
-export const EMAIL_USER_PROD = "arno@putsbox.com";
+export const EMAIL_USER_PROD = "jacek+ppe2e@near-me.com";
