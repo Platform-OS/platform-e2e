@@ -37,7 +37,10 @@ pipeline {
       }
       when { anyOf { branch 'master' } }
       steps {
-        withCredentials([usernamePassword(credentialsId: 'gmail-qa-user', usernameVariable: 'GOOGLE_EMAIL', passwordVariable: 'GOOGLE_PASSWORD')]) {
+        withCredentials([
+          usernamePassword(credentialsId: 'gmail-qa-user', usernameVariable: 'GOOGLE_EMAIL', passwordVariable: 'GOOGLE_PASSWORD'),
+          usernamePassword(credentialsId: 'pp-uat-user', usernameVariable: 'USER_NAME_PP', passwordVariable: 'USER_PASS_PP')
+        ]){
           sh 'npm run test-ci'
         }
       }
