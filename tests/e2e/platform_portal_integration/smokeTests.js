@@ -1,15 +1,15 @@
 import 'testcafe';
 import {
   BASE_URL,
-  EMAIL_USER_PROD,
-  ADMIN_PASS,
-} from './environment/environment';
-import LoginPage from './page-objects/loginPage';
-import Notifications from './page-objects/notifications';
-import Navigation from './page-objects/navigation';
-import InstancePage from './page-objects/instancePage';
-import BasePage from './page-objects/basePage';
-import ModulePage from './page-objects/modulePage';
+  USER_NAME,
+  USER_PASS,
+} from '../environment/environment';
+import LoginPage from '../page-objects/loginPage';
+import Notifications from '../page-objects/notifications';
+import Navigation from '../page-objects/navigation';
+import InstancePage from '../page-objects/instancePage';
+import BasePage from '../page-objects/basePage';
+import ModulePage from '../page-objects/modulePage';
 
 const loginPage = new LoginPage();
 const notifications = new Notifications();
@@ -18,13 +18,14 @@ const instancePage = new InstancePage();
 const basePage = new BasePage();
 const modulePage = new ModulePage();
 
-const admin_pass = ADMIN_PASS;
+const user_name = USER_NAME;
+const user_pass = USER_PASS;
 const instanceName = `test+${+new Date ()}`;
 
 fixture `pOS - PP - POS-CLI integration tests`.page(BASE_URL);
 
 test('Should let you create instance', async t => {
-  await loginPage.login(EMAIL_USER_PROD, admin_pass);
+  await loginPage.login(user_name, user_pass);
   await t
     .click(navigation.link.instances)
     .click(instancePage.button.newInstance);
@@ -42,7 +43,7 @@ test('Should let you create instance', async t => {
 });
 
 test('Should install blog module', async t => {
-  await loginPage.login(EMAIL_USER_PROD, admin_pass);
+  await loginPage.login(user_name, user_pass);
   await basePage.openPage(modulePage.installUAT_blogModule);
   await t
     .click(modulePage.button.addModuleToInstance)
@@ -57,7 +58,7 @@ test('Should install blog module', async t => {
 });
 
 test('Blog module should be installed on the page', async t => {
-  await loginPage.login(EMAIL_USER_PROD, admin_pass);
+  await loginPage.login(user_name, user_pass);
   await t
     .wait(30000) //waiting for module deploy
     .click(navigation.link.instances)
@@ -68,7 +69,7 @@ test('Blog module should be installed on the page', async t => {
 });
 
 test('Should let you remove instance', async t => {
-  await loginPage.login(EMAIL_USER_PROD, admin_pass);
+  await loginPage.login(user_name, user_pass);
   await t
     .click(instancePage.link.instanceName)
     .click(instancePage.link.dangerZone)
@@ -78,7 +79,7 @@ test('Should let you remove instance', async t => {
 });
 
 test('Instance should be removed', async t => {
-  await loginPage.login(EMAIL_USER_PROD, admin_pass);
+  await loginPage.login(user_name, user_pass);
   await t
     .click(navigation.link.instances)
     .expect(instancePage.link.instanceName.count)
