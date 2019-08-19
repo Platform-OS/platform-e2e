@@ -9,7 +9,7 @@ export default class ModulePage {
     this.installUAT_blogModule = "/marketplace/pos_modules/19";
     this.element = {
       versionName: Selector("tr > td:nth-of-type(1)").withText("v2"),
-      blogTagLine: Selector("c-hero__title").withText("PlatformOS Blog"),
+      blogTagLine: Selector("h1.c-hero__title"),
       archiveURL: Selector("#DataTables_Table_0 tr td:nth-of-type(2)")
     };
     this.input = {

@@ -19,7 +19,7 @@ const basePage = new BasePage();
 const modulePage = new ModulePage();
 
 const admin_pass = ADMIN_PASS;
-const instanceName = `test+${+new Date ()}`;
+const instanceName = `test+${+new Date()}`;
 
 fixture `pOS - PP - POS-CLI integration tests`.page(BASE_URL);
 
@@ -64,7 +64,7 @@ test('Blog module should be installed on the page', async t => {
     .click(instancePage.link.instanceName);
   await t.expect(modulePage.button.uninstallModule.exists).ok();
   await t.click(modulePage.link.blogPage);
-  await t.expect(modulePage.element.blogTagLine).ok();
+  await t.expect(modulePage.element.blogTagLine.innerText).eql('PlatformOS Blog');
 });
 
 test('Should let you remove instance', async t => {
