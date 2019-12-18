@@ -1,5 +1,3 @@
-import { Selector } from 'testcafe';
-import faker from 'faker';
 import Home from './home-page';
 import sh from 'shelljs';
 const fs = require('fs');
@@ -42,6 +40,11 @@ test.before(async t => {
 
   await t.expect(command.code).eql(0);
 })('Export imported data', async t => {
+  await t.navigateTo('/import_export');
+  const results = JSON.parse(await home.results.innerText);
+  await t.expect(results.models.total_entries).eql(3);
+  await t.expect(results.users.total_entries).eql(2);
+
   const filename = 'modules/import_export/test/fixtures/data-exported.json';
   let command = sh.exec(`pos-cli data export -p ${filename}`);
 
