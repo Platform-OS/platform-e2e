@@ -27,21 +27,10 @@ test.before(async t => {
 test.before(async t => {
   let command = sh.exec(`pos-cli data import -p ./modules/import_export/test/fixtures/data.json`);
   await t.expect(command.code).eql(0);
-})('Import data file', async t => {
+})('Import data file and export back', async t => {
   await t.navigateTo('/import_export');
   const results = JSON.parse(await home.results.innerText);
 
-  await t.expect(results.models.total_entries).eql(3);
-  await t.expect(results.users.total_entries).eql(2);
-});
-
-test.before(async t => {
-  let command = sh.exec(`pos-cli data import -p ./modules/import_export/test/fixtures/data.json`);
-
-  await t.expect(command.code).eql(0);
-})('Export imported data', async t => {
-  await t.navigateTo('/import_export');
-  const results = JSON.parse(await home.results.innerText);
   await t.expect(results.models.total_entries).eql(3);
   await t.expect(results.users.total_entries).eql(2);
 
