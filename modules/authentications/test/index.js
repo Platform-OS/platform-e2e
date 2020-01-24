@@ -48,7 +48,6 @@ test('signup without existing user', async t => {
   await t.expect(oauth.providers.google.connect.exists).ok();
   await oauth.connectWith(t, 'google');
   await t.expect(oauth.google.email.exists).ok();
-  await t.expect(oauth.google.email.next).ok();
 
   // TODO: login to google account as a bot
 });
