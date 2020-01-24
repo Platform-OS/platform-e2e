@@ -19,14 +19,15 @@ const { user, google } = {
 
 fixture('OAuth authentications').page(`${process.env.MP_URL}/authentications`);
 
-test('Connect existing user', async t => {
-  await users.register(user.email, user.password);
-  await users.login(user.email, user.password);
-  await t.navigateTo('/authentications');
+// test('Connect existing user', async t => {
+//   await users.register(user.email, user.password);
+//   await users.login(user.email, user.password);
+//   await t.navigateTo('/authentications');
 
-  await t.expect(oauth.currentUser.email.innerText).eql(`current_user: ${user.email}`);
-  await t.expect(oauth.currentUser.authentications.innerText).eql('authentications:');
-  // await oauth.connectWith(t, 'google');
+//   await t.expect(oauth.currentUser.email.innerText).eql(`current_user: ${user.email}`);
+//   await t.expect(oauth.currentUser.authentications.innerText).eql('authentications:');
+//   await t.expect(oauth.providers.google.connect.exists).ok();
+//   await oauth.connectWith(t, 'google');
   // await t
   //   .typeText(oauth.google.email, google.email)
   //   .click(oauth.google.next)
@@ -38,4 +39,16 @@ test('Connect existing user', async t => {
   // await t.expect(oauth.currentUser.authentications.innerText).eql('authentications: google');
   // await oauth.disconnectFrom(t, 'google');
   // await t.expect(oauth.currentUser.authentications.innerText).eql('authentications:');
+// });
+
+test('signup without existing user', async t => {
+  await t.navigateTo('/authentications');
+
+  await t.expect(oauth.currentUser.authentications.innerText).eql('authentications:');
+  await t.expect(oauth.providers.google.connect.exists).ok();
+  await oauth.connectWith(t, 'google');
+  await t.expect(oauth.google.email.exists).ok();
+  await t.expect(oauth.google.email.next).ok();
+
+  // TODO: login to google account as a bot
 });
