@@ -9,7 +9,7 @@ pipeline {
   }
 
   parameters {
-    string(description: 'Instance URL. When empty then we deploy on qa0', name: 'MP_URL', defaultValue: "https://platform-e2e.qa0-pos.apps.near-me.com")
+    string(description: 'Instance URL. When empty then we deploy on qa0', name: 'MP_URL', defaultValue: "https://platform-e2e-2.qa0-pos.apps.near-me.com")
   }
 
   options {
