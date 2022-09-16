@@ -28,7 +28,7 @@ pipeline {
     }
 
     stage('Test on URL') {
-      agent { docker { image "platformos/testcafe-pos-cli" } }
+      agent { docker { image "platformos/testcafe-pos-cli:4.5.16-1.16" } }
       environment {
         MP_URL = "${params.MP_URL}"
         MPKIT_URL = "${params.MP_URL}"
