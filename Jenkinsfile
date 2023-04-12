@@ -1,57 +1,94 @@
-@Library('pipeline-utils')_  // it's not a typo
+// withCredentials([usernamePassword(credentialsId: 'gmail-qa-user', usernameVariable: 'GOOGLE_EMAIL', passwordVariable: 'GOOGLE_PASSWORD')]) {
+//   sh 'npm run test-ci'
+// }
+
 
 pipeline {
   agent any
 
-  environment {
-    MPKIT_TOKEN = credentials('POS_TOKEN')
-    MPKIT_EMAIL = "darek+ci@near-me.com"
+  options {
+    disableConcurrentBuilds()
+    timeout(time: 20, unit: 'MINUTES')
+    buildDiscarder(logRotator(daysToKeepStr: '1', artifactDaysToKeepStr: '1'))
   }
 
   parameters {
-    string(description: 'Instance URL. When empty then we deploy on qa0', name: 'MP_URL', defaultValue: "https://platform-e2e.qa0.oregon.platformos.com")
+    // string(description: 'Instance URL', name: 'MPKIT_URL', defaultValue: 'https://alpha.shx-01.frankfurt.platformos.com')
+    // string(description: 'Instance URL', name: 'MPKIT_URL', defaultValue: 'https://template.qa0.oregon.platformos.com')
+    choice(
+      choices: [
+        'https://ci-01.platformos.dev',
+        'https://ci-02.platformos.dev',
+        'https://ci-03.platformos.dev',
+        'https://template.qa0.oregon.platformos.com',
+        'https://getmarketplace-beta.staging.oregon.platform-os.com'
+      ],
+      name: 'MPKIT_URL')
   }
 
-  options {
-    disableConcurrentBuilds()
-    timeout(time: 10, unit: 'MINUTES')
+  environment {
+    MPKIT_TOKEN = credentials('MPKIT_TOKEN')
+    MPKIT_EMAIL = credentials('MPKIT_EMAIL')
+    MPKIT_URL   = "${params.MPKIT_URL}"
+    CI = true
+
+    // TC REPORTS
+    UPLOAD_HOST = "https://tests.qa0.oregon.platformos.com"
+    REPORT_PATH  = "${env.GIT_COMMIT}-${System.currentTimeMillis()}"
+    REPORT_TYPE = "manual"
   }
 
   stages {
-    stage('Deploy on URL') {
-      agent { docker { image 'platformos/pos-cli' } }
-      environment {
-        MPKIT_URL = "${params.MP_URL}"
+    stage('build') {
+      agent { kubernetes { yaml podTemplate("amd64") } }
+      steps {
+        container(name: 'testcafe') {
+          sh 'pos-cli deploy'
+          sh 'sleep 10'
+        }
       }
-      when { anyOf { branch 'master' } }
-      steps { sh 'pos-cli deploy' }
     }
 
-    stage('Test on URL') {
-      agent { docker { image "platformos/testcafe-pos-cli:4.5.16-1.16" } }
-      environment {
-        MP_URL = "${params.MP_URL}"
-        MPKIT_URL = "${params.MP_URL}"
-        MPKIT_TOKEN = credentials('POS_TOKEN')
-        MPKIT_EMAIL = "darek+ci@near-me.com"
-      }
-      when { anyOf { branch 'master' } }
+    stage("tests") {
+      agent { kubernetes { yaml podTemplate("amd64") } }
       steps {
-        withCredentials([usernamePassword(credentialsId: 'gmail-qa-user', usernameVariable: 'GOOGLE_EMAIL', passwordVariable: 'GOOGLE_PASSWORD')]) {
+
+        container(name: 'testcafe') {
           sh 'npm run test-ci'
         }
       }
-      post { failure { archiveArtifacts "screenshots/" } }
+
+      post {
+        always {
+          container(name: 'testcafe') {
+            sh 'REPORT_TYPE=tc-concurrent npm run ci:test:publish'
+            publishHTML (target: [allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: '', reportFiles: 'test-report.html', reportName: "tc-concurrent"])
+          }
+        }
+      }
     }
+
   }
 }
 
-def commitInfo() {
-  GH_URL = "https://github.com/mdyd-dev/platform-e2e"
-
-  def commitSha = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
-  // def commitAuthor = sh(returnStdout: true, script: 'git log --no-merges --format="%an" -1').trim()
-  def commitMsg = sh(returnStdout: true, script: 'git log --no-merges --format="%B" -1 ${commitSha}').trim()
-
-  return "<${GH_URL}/commit/${commitSha}|${commitSha} ${commitMsg}>"
+def podTemplate(arch) {
+  return """
+        spec:
+          nodeSelector:
+            beta.kubernetes.io/arch: "${arch}"
+          containers:
+          - name: testcafe
+            resources:
+              limits:
+                cpu: 3
+                memory: 4Gi
+              requests:
+                cpu: 3
+              memory: 4Gi
+            image: 'platformos/testcafe:4.6.2-1.17.1'
+            imagePullPolicy: Always
+            command:
+            - cat
+            tty: true
+"""
 }
