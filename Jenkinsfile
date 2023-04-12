@@ -43,7 +43,7 @@ pipeline {
       post {
         always {
           container(name: 'testcafe') {
-            sh 'REPORT_TYPE=tc-concurrent npm run ci:test:publish'
+            // sh 'REPORT_TYPE=tc-concurrent npm run ci:test:publish'
             publishHTML (target: [allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: '', reportFiles: 'test-report.html', reportName: "tc-concurrent"])
           }
         }
