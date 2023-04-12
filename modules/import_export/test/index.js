@@ -9,7 +9,7 @@ const sleep = (ms) => {
 };
 
 fixture('Import Export')
-  .page(`${process.env.MP_URL}/import_export`)
+  .page(`${process.env.MPKIT_URL}/import_export`)
   .afterEach(async t => {
     let command = sh.exec(`pos-cli data clean --auto-confirm`);
     await t.expect(command.code).eql(0);

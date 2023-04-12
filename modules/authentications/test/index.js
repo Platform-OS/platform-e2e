@@ -17,7 +17,7 @@ const { user, google } = {
   }
 };
 
-fixture('OAuth authentications').page(`${process.env.MP_URL}/authentications`);
+fixture('OAuth authentications').page(`${process.env.MPKIT_URL}/authentications`);
 
 // test('Connect existing user', async t => {
 //   await users.register(user.email, user.password);
