@@ -35,15 +35,6 @@ pipeline {
         container(name: 'testcafe') {
           sh 'pos-cli deploy'
           sh 'sleep 10'
-        }
-      }
-    }
-
-    stage("tests") {
-      agent { kubernetes { yaml podTemplate("amd64") } }
-      steps {
-
-        container(name: 'testcafe') {
           sh 'npm run test-ci'
         }
       }
