@@ -58,6 +58,9 @@ def podTemplate(arch) {
         spec:
           nodeSelector:
             beta.kubernetes.io/arch: "${arch}"
+          imagePullSecrets:
+          - name: dockeriosec
+          - name: ocirsecret
           containers:
           - name: testcafe
             resources:
