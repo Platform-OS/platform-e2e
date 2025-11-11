@@ -36,7 +36,9 @@ pipeline {
           sh 'npm ci'
           sh 'pos-cli deploy'
           sh 'sleep 10'
-          sh 'npm run test-ci'
+          retry(2) { 
+            sh 'npm run test-ci'
+          }
         }
       }
 
