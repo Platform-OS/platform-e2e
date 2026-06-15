@@ -56,7 +56,7 @@
       "customizable_type": "User",
       "properties": {
         "color": "green",
-        "description": "Small house",
+        "description": "Small house"
       },
       "addresses": [
         {
