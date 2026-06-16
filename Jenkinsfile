@@ -33,7 +33,7 @@ pipeline {
       agent { kubernetes { yaml podTemplate("amd64") } }
       steps {
         container(name: 'playwright') {
-          sh 'npm install'
+          sh 'npm ci'
           sh 'pos-cli data clean --include-schema --auto-confirm'
           sh 'pos-cli deploy'
           sh 'sleep 10'

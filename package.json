@@ -11,7 +11,7 @@
   "repository": "https://github.com/mdyd-dev/platform-e2e.git",
   "license": "ISC",
   "devDependencies": {
-    "@playwright/test": "^1.60.0",
+    "@playwright/test": "1.60.0",
     "@types/node": "^20.0.0"
   }
 }
