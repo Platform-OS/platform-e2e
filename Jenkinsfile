@@ -13,7 +13,7 @@ pipeline {
   }
 
   parameters {
-    string(description: 'Instance URL', name: 'TARGET_URL', defaultValue: 'https://platform-e2e.qa0.oregon.platformos.com')
+    string(description: 'Instance URL', name: 'TARGET_URL', defaultValue: 'https://platform-e2e.staging.oregon.platform-os.com')
   }
 
   environment {
@@ -43,7 +43,7 @@ pipeline {
 
       post {
         always {
-          container(name: 'testcafe') {
+          container(name: 'playwright') {
             publishHTML (target: [allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: "playwright"])
           }
         }
