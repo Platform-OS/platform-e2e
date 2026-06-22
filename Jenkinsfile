@@ -4,11 +4,10 @@
 
 
 pipeline {
-  agent any
+  agent none
 
   options {
     disableConcurrentBuilds()
-    timeout(time: 20, unit: 'MINUTES')
     buildDiscarder(logRotator(daysToKeepStr: '1', artifactDaysToKeepStr: '1'))
   }
 
@@ -30,11 +29,14 @@ pipeline {
 
   stages {
     stage('deploy') {
+      options {
+        timeout(time: 5, unit: 'MINUTES')
+      }
       agent { kubernetes { yaml podTemplate("amd64") } }
       steps {
         container(name: 'playwright') {
           sh 'npm ci'
-          sh 'DEBUG=1 pos-cli data clean --include-schema --auto-confirm'
+          sh 'pos-cli data clean --include-schema --auto-confirm'
           sh 'pos-cli deploy'
           sh 'sleep 10'
         }
@@ -42,6 +44,9 @@ pipeline {
     }
 
     stage('test') {
+      options {
+        timeout(time: 5, unit: 'MINUTES')
+      }
       agent { kubernetes { yaml podTemplate("amd64") } }
       steps {
         container(name: 'playwright') {
@@ -52,7 +57,7 @@ pipeline {
       post {
         always {
           container(name: 'playwright') {
-            publishHTML (target: [allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: "playwright"])
+            publishHTML (target: [allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: "playwright"])
           }
         }
       }
