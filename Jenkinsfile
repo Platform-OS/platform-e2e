@@ -34,7 +34,7 @@ pipeline {
       steps {
         container(name: 'playwright') {
           sh 'npm ci'
-          sh 'pos-cli data clean --include-schema --auto-confirm'
+          sh 'DEBUG=1 pos-cli data clean --include-schema --auto-confirm'
           sh 'pos-cli deploy'
           sh 'sleep 10'
           sh 'npm run test-ci'
